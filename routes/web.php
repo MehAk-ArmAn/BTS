@@ -27,3 +27,8 @@ Route::get('/gallery', [GalleryController::class, 'index']);
 //voting page 
 Route::get('/vote', [BTSController::class, 'showVoteForm']);
 Route::post('/vote', [BTSController::class, 'handleVote']);
+
+// 0t7 image path 
+Route::get('/bts', function () {
+    return response()->file(public_path('extra_gallery/_BTS_.jfif'));
+});

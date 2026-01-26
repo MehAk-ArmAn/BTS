@@ -73,5 +73,4 @@ class BTSController extends Controller
         return "You voted for $member 💜🤞🏻✨!";
     }
 
-
 }

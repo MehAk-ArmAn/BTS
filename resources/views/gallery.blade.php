@@ -11,9 +11,10 @@
         <div class="gallery">
             @foreach($pics as $pic)
                 <div class="pic">
-                    <img src="{{ asset('extra_gallery/' . $pic) }}" alt="BTS Meme">
+                    <img src="{{ asset('extra_gallery/' . $pic->filename) }}" alt="BTS Meme">
                 </div>
             @endforeach
+
         </div>
     </body>
 </html>

@@ -11,10 +11,17 @@
         <div class="gallery">
             @foreach($pics as $pic)
                 <div class="pic">
-                    <img src="{{ asset('extra_gallery/' . $pic->filename) }}" alt="BTS Meme">
+                    <img src="{{ asset($pic->img_path) }}" alt="{{ $pic->name }}">
                 </div>
             @endforeach
 
         </div>
+
+        <!-- Hidden navbar -->
+        @include('partials.secret-navbar')
+        <!-- Link CSS -->
+    <link rel="stylesheet" href="{{ asset('css/secret-navbar.css') }}">
+        <!-- JS -->
+        <script src="{{ asset('js/bts.js') }}"></script>
     </body>
 </html>

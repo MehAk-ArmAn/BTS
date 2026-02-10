@@ -19,6 +19,11 @@
                 </div>
             @endfor
         </div>
-        
+        <!-- Hidden navbar -->
+        @include('partials.secret-navbar')
+        <!-- Link CSS -->
+    <link rel="stylesheet" href="{{ asset('css/secret-navbar.css') }}">
+        <!-- JS -->
+        <script src="{{ asset('js/bts.js') }}"></script>
     </body>
 </html>

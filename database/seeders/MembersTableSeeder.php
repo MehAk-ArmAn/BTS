@@ -54,9 +54,9 @@ class MembersTableSeeder extends Seeder
                 'nickname' => 'Jk',
                 'favicon' => 'COOKY.png'],
         ];
-        
+
         foreach ($members as $member) {
             Member::create($member);
         }
     }
-}
+};

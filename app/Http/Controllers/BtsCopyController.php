@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BtsCopy;  // Model that talks to the DB table
 use Illuminate\Http\Request;  // Used to read form inputs
+use Illuminate\Validation\Rule;
 
 class BtsCopyController extends Controller
 {
@@ -23,27 +24,20 @@ class BtsCopyController extends Controller
         // If validation fails, Laravel automatically sends user back
         // and fills $errors in Blade file.
         $validated = $request->validate([
-            'bts_name' => ['required', 'string', 'max:120'],
-            'copy_extra_name' => ['nullable', 'string', 'max:120'],
+            'bts_name' => ['required', 'string', 'max:255'],
+            'copy_extra_name' => ['nullable', 'string', 'max:255'],
             'copy_title' => [
-                'required', 'string', 'max:200',
-                // Custom validation rule (your special requirement)
-                function ($attribute, $value, $fail) use ($request) {
-                    // get BTS name typed by user
-                    $btsName = trim((string) $request->input('bts_name'));
-                    // if empty, nothing to check
-                    if ($btsName === '') return;
-
-                    // stripos = checks if BTS name exists inside title (case-insensitive)
-                    // Example: "BTS_Learning" exists inside "BTS_Learning copy A"
-                    if (stripos($value, $btsName) === false) {
-                        // Fail means show error message and do not save
-                        $fail("Copy Title must include the BTS Name: '{$btsName}'.");
-                    }
-                }
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('bts_copies')
+                    ->where('bts_name', $request->bts_name),
             ],
             'description' => ['nullable', 'string', 'max:5000'],
+        ], [
+            'copy_title.unique' => '😤 This BTS copy already exists. Stop trying to clone it.',
         ]);
+
 
         // 2) SAVE INTO DATABASE
         // This uses the model to insert a new row into `bts_copies` table

@@ -9,6 +9,12 @@ class Member extends Model
 {
     use HasFactory;
 
-    // Allow mass assignment for these fields
-    protected $fillable = ['name', 'role', 'image', 'nickname'];
+    protected $fillable = [
+        'name',
+        'role',
+        'image',
+        'quote',
+        'nickname',
+        'favicon',
+    ];
 }

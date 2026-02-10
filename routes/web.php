@@ -11,9 +11,6 @@ Route::get('/', function () {
 
 Route::get('/quotes', [BTSController::class, 'quotes']); // quotes page
 
-// Dynamic member route
-Route::get('/member/{name}', [BTSController::class, 'memberPage']);
-
 Route::get('/Bt21', [BTSController::class, 'bt21']);
 
 // meme gallery page
@@ -40,3 +37,6 @@ Route::post('/bts_copies', [BtsCopyController::class, 'store'])
 // (Optional) GET /bts_copies to show list page
 Route::get('/bts_copies', [BtsCopyController::class, 'index'])
     ->name('bts_copies.index');
+
+// Dynamic member route
+Route::get('/{name}', [BTSController::class, 'memberPage']);

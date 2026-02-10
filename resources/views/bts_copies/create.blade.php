@@ -51,7 +51,7 @@
 
             <div class="hint">
                 Rule: the title must contain the BTS Name
-                (example: <i>BTS_Learning - Copy for Student A</i>)
+                (example: <i>BTS_nickname - Copy for _ member</i>)
             </div>
 
             <label>Description</label>

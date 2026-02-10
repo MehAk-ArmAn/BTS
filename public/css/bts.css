@@ -1,20 +1,27 @@
-body {
-    margin: 0;
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center;     /* Center vertically */
-    min-height: 100vh;
+html, body {
+    height: 100%; /* Ensures both html and body span the full height of the viewport */
+    margin: 0;   /* Removes default body margins */
+}
 
-    background-image: url('../imgs/background.jpeg'); /* Background img, styling stuff */
+/* Keep your body styles for background and centering */
+body {
+    display: flex;             /* Enables flexbox layout for the body container */
+    justify-content: center;   /* Centers content horizontally along the main axis */
+    align-items: center;
+    background-image: url('../imgs/background.jpeg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
-    
 }
 
+/* H1 big text in center stays */
 h1 {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 200px;
     color: rgba(255, 255, 255, 0.692);
     text-shadow: 2px 2px 4px rgb(0, 0, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* fill screen */
 }

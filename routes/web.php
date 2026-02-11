@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GalleryController;
-use App\Http\Controllers\BTSController;
-
-// welcome home/default page
+use App\Http\Controllers\BTSController; // welcome home/default page
 Route::get('/', function () {
     return view('welcome');
 });
@@ -20,9 +18,9 @@ Route::get('/gallery', [GalleryController::class, 'index']);
 Route::get('/vote', [BTSController::class, 'showVoteForm']);
 Route::post('/vote', [BTSController::class, 'handleVote']);
 
-// 0t7 image path
+// 0t7 images paths
 Route::get('/bts', function () {
-    return response()->file(public_path('extra_gallery/_BTS_.jfif'));
+    return response()->file(public_path('imgs/btsssss.jfif'));
 });
 
 // bts copy generator controller

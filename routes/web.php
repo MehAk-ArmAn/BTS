@@ -1,0 +1,198 @@
+<?php
+
+use App\Http\Controllers\Admin\FooterLinksController;
+use App\Http\Controllers\Admin\SitePageController;
+use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\PublicPageController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\ProfileAssetsController;
+use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\MediaGalleryController;
+use App\Http\Controllers\Admin\MediaGalleryController as AdminMediaGalleryController;
+use App\Http\Controllers\BtsUpdateController;
+use App\Http\Controllers\Admin\BtsUpdatesController;
+use App\Http\Controllers\VoteController;
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\Bt21Controller;
+use App\Http\Controllers\Admin\LearningMaterialsController;
+use App\Http\Controllers\Admin\MembersController;
+use App\Http\Controllers\Admin\NavigationController;
+use App\Http\Controllers\Admin\QuizzesController;
+use App\Http\Controllers\Admin\QuotesController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\SongsController as AdminSongsController;
+use App\Http\Controllers\Admin\TimelineController;
+use App\Http\Controllers\Admin\VotesController;
+use App\Http\Controllers\Auth\PublicAuthController;
+use App\Http\Controllers\BTSController;
+use App\Http\Controllers\BtsCopyController;
+use App\Http\Controllers\LearningController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\SongsController;
+use App\Http\Controllers\UserDashboardController;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Public extra professional pages routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [BTSController::class, 'home'])->name('home');
+Route::get('/quotes', [BTSController::class, 'quotes'])->name('quotes');
+Route::get('/bt21', [BTSController::class, 'bt21'])->name('bt21');
+Route::get('/Bt21', [BTSController::class, 'bt21']);
+Route::get('/gallery', [MediaGalleryController::class, 'index'])->name('gallery.index');
+Route::get('/songs', [SongsController::class, 'index'])->name('songs');
+Route::get('/search', [BTSController::class, 'search'])->name('search');
+Route::get('/bts-achievements', [BTSController::class, 'achievements'])->name('achievements');
+Route::get('/members/{slug}', [BTSController::class, 'memberPage'])->name('member.show');
+Route::get('/privacy-policy', [BTSController::class, 'privacyPolicy'])->name('privacy.policy');
+Route::get('/contact', [BTSController::class, 'contact'])->name('contact');
+
+/*
+|--------------------------------------------------------------------------
+| Public website routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/about', [PublicPageController::class, 'show'])
+    ->defaults('slug', 'about')
+    ->name('pages.about');
+
+Route::get('/contact', [PublicPageController::class, 'show'])
+    ->defaults('slug', 'contact')
+    ->name('pages.contact');
+
+Route::post('/contact', [ContactController::class, 'submit'])
+    ->name('contact.submit');
+
+Route::get('/privacy-policy', [PublicPageController::class, 'show'])
+    ->defaults('slug', 'privacy-policy')
+    ->name('pages.privacy');
+
+Route::get('/terms', [PublicPageController::class, 'show'])
+    ->defaults('slug', 'terms')
+    ->name('pages.terms');
+
+Route::get('/disclaimer', [PublicPageController::class, 'show'])
+    ->defaults('slug', 'disclaimer')
+    ->name('pages.disclaimer');
+
+Route::get('/cookies', [PublicPageController::class, 'show'])
+    ->defaults('slug', 'cookies')
+    ->name('pages.cookies');
+
+Route::get('/community-guidelines', [PublicPageController::class, 'show'])
+    ->defaults('slug', 'community-guidelines')
+    ->name('pages.community');
+
+Route::get('/copyright', [PublicPageController::class, 'show'])
+    ->defaults('slug', 'copyright')
+    ->name('pages.copyright');
+
+Route::get('/data-deletion', [PublicPageController::class, 'show'])
+    ->defaults('slug', 'data-deletion')
+    ->name('pages.data-deletion');
+
+
+/* Learning gallery pages - no quizzes mixed inside. */
+Route::get('/learn', [LearningController::class, 'index'])->name('learn.index');
+Route::get('/learn/{slug}', [LearningController::class, 'show'])->name('learn.show');
+
+/* Quiz arena - separate from learning material. */
+Route::get('/quizzes', [QuizController::class, 'index'])->name('quizzes.index');
+Route::get('/quizzes/{quiz:slug}', [QuizController::class, 'show'])->name('quizzes.show');
+Route::get('/leaderboard', [LearningController::class, 'leaderboard'])->name('leaderboard');
+Route::get('/army', [UserDashboardController::class, 'community'])->name('profiles.index');
+Route::get('/u/{profile}', [UserDashboardController::class, 'publicProfile'])->name('profiles.show');
+Route::get('/updates', [BtsUpdateController::class, 'index'])->name('updates.index');
+Route::get('/updates/{update:slug}', [BtsUpdateController::class, 'show'])->name('updates.show');
+
+/* Public auth */
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [PublicAuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [PublicAuthController::class, 'login'])->name('login.store');
+    Route::get('/register', [PublicAuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [PublicAuthController::class, 'register'])->name('register.store');
+    Route::get('/auth/google', [PublicAuthController::class, 'googleNotice'])->name('google.notice');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [PublicAuthController::class, 'logout'])->name('logout');
+    Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('user.dashboard');
+    Route::post('/dashboard/checkin', [UserDashboardController::class, 'checkin'])->name('user.checkin');
+    Route::get('/profile', [UserDashboardController::class, 'profile'])->name('profile.edit');
+    Route::put('/profile', [UserDashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/assets/{asset}/unlock', [UserDashboardController::class, 'unlockAsset'])->name('profile.assets.unlock');
+    Route::post('/quizzes/{quiz:slug}/submit', [QuizController::class, 'submit'])->name('quizzes.submit');
+});
+
+/* Vote system */
+Route::get('/vote', [VoteController::class, 'index'])->name('vote.index');
+Route::post('/vote', [VoteController::class, 'store'])->name('vote.store');
+
+/* Old image helper route kept because some existing content may use route('bts.image'). */
+Route::get('/bts', fn () => response()->file(public_path('imgs/btsssss.jfif')))->name('bts.image');
+
+/* Existing CRUD page from the original project. */
+Route::resource('bts_copies', BtsCopyController::class)->except(['show']);
+
+/*
+|--------------------------------------------------------------------------
+| Admin panel routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+
+    Route::middleware('admin')->group(function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+        Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+        Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
+        Route::post('/settings/password', [SettingsController::class, 'password'])->name('settings.password');
+
+        Route::resource('/navigation', NavigationController::class)->except(['show', 'create', 'edit']);
+        Route::resource('/members', MembersController::class)->only(['index', 'update']);
+        Route::resource('/songs', AdminSongsController::class)->except(['show', 'create', 'edit']);
+        Route::resource('/quotes', QuotesController::class)->except(['show', 'create', 'edit']);
+        Route::resource('/footer-links', FooterLinksController::class)->except(['show', 'create', 'edit']);
+        Route::resource('/timeline', TimelineController::class)->except(['show', 'create', 'edit']);
+        Route::resource('/bt21', Bt21Controller::class)->except(['show', 'create', 'edit']);
+        Route::resource('/learning-materials', LearningMaterialsController::class)->except(['show', 'create', 'edit']);
+        Route::resource('/quizzes', QuizzesController::class)->except(['show', 'create', 'edit']);
+        Route::post('/quizzes/{quiz}/questions', [QuizzesController::class, 'storeQuestion'])->name('quizzes.questions.store');
+        Route::put('/quiz-questions/{question}', [QuizzesController::class, 'updateQuestion'])->name('quiz-questions.update');
+        Route::delete('/quiz-questions/{question}', [QuizzesController::class, 'destroyQuestion'])->name('quiz-questions.destroy');
+        Route::resource('/updates', BtsUpdatesController::class)->except(['show', 'create', 'edit']);
+        Route::get('/votes', [VotesController::class, 'index'])->name('votes.index');
+
+        Route::get('/media-gallery', [AdminMediaGalleryController::class, 'index'])->name('media-gallery.index');
+
+        Route::post('/media-gallery/albums', [AdminMediaGalleryController::class, 'storeAlbum'])->name('media-gallery.albums.store');
+        Route::put('/media-gallery/albums/{album}', [AdminMediaGalleryController::class, 'updateAlbum'])->name('media-gallery.albums.update');
+        Route::delete('/media-gallery/albums/{album}', [AdminMediaGalleryController::class, 'destroyAlbum'])->name('media-gallery.albums.destroy');
+
+        Route::post('/media-gallery/items', [AdminMediaGalleryController::class, 'storeItem'])->name('media-gallery.items.store');
+        Route::put('/media-gallery/items/{item}', [AdminMediaGalleryController::class, 'updateItem'])->name('media-gallery.items.update');
+        Route::delete('/media-gallery/items/{item}', [AdminMediaGalleryController::class, 'destroyItem'])->name('media-gallery.items.destroy');
+
+        Route::resource('/profile-assets', ProfileAssetsController::class)->except(['show', 'create', 'edit']);
+
+        Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+        Route::put('/users/{user}', [UsersController::class, 'update'])->name('users.update');
+        Route::post('/users/{user}/assets', [UsersController::class, 'syncAssets'])->name('users.assets.sync');
+        Route::delete('/users/{user}', [UsersController::class, 'destroy'])->name('users.destroy');
+
+        Route::resource('site-pages', SitePageController::class);
+
+        Route::resource('contact-messages', ContactMessageController::class)
+            ->only(['index', 'show', 'update', 'destroy']);
+
+    });
+});
+
+/* Old member URL compatibility: /Kim%20Namjoon, /Jin, etc. Keep at the very end. */
+Route::get('/{name}', [BTSController::class, 'memberPage']);

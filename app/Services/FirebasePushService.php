@@ -17,6 +17,7 @@ class FirebasePushService
         string $body,
         array $data = [],
         ?string $topic = null,
+        ?string $image = null,
     ): bool {
         try {
             $projectId = (string) config('firebase.project_id');
@@ -58,6 +59,39 @@ class FirebasePushService
                 }
             }
 
+            $notification = [
+                'title' => $title,
+                'body' => $body,
+            ];
+
+            $androidNotification = [
+                'channel_id' => config(
+                    'firebase.channel_id',
+                    'bangtan_updates',
+                ),
+                'sound' => 'default',
+            ];
+
+            $apns = [
+                'payload' => [
+                    'aps' => [
+                        'sound' => 'default',
+                    ],
+                ],
+            ];
+
+            if (is_string($image) && trim($image) !== '') {
+                $image = trim($image);
+
+                $notification['image'] = $image;
+                $androidNotification['image'] = $image;
+
+                $apns['payload']['aps']['mutable-content'] = 1;
+                $apns['fcm_options'] = [
+                    'image' => $image,
+                ];
+            }
+
             $response = Http::withToken($accessToken)
                 ->acceptJson()
                 ->asJson()
@@ -69,33 +103,17 @@ class FirebasePushService
                         'message' => [
                             'topic' => $topic,
 
-                            'notification' => [
-                                'title' => $title,
-                                'body' => $body,
-                            ],
+                            'notification' => $notification,
 
                             'data' => $cleanData,
 
                             'android' => [
                                 'priority' => 'high',
                                 'ttl' => '86400s',
-
-                                'notification' => [
-                                    'channel_id' => config(
-                                        'firebase.channel_id',
-                                        'bangtan_updates',
-                                    ),
-                                    'sound' => 'default',
-                                ],
+                                'notification' => $androidNotification,
                             ],
 
-                            'apns' => [
-                                'payload' => [
-                                    'aps' => [
-                                        'sound' => 'default',
-                                    ],
-                                ],
-                            ],
+                            'apns' => $apns,
                         ],
                     ],
                 );

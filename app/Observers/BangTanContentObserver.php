@@ -32,6 +32,7 @@ class BangTanContentObserver implements ShouldHandleEventsAfterCommit
             $notification['title'],
             $notification['body'],
             $notification['data'],
+            image: $notification['image'] ?? null,
         );
     }
 }
